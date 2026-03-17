@@ -1,9 +1,15 @@
-# test-image.png
+# Notes
 
-![[test-image.png|500]]
+# Content
 
-This index file enables Obsidian and its plugins to manage image files effectively. It ensures image files appear in graphs and allows plugins compatible only with MD files to access these files.
+File: [test-image.png](test-image.png)
 
-# Image Content
+![[test-image.png#height=500]]
 
-Test Image Content
+> Feel free to write custom notes ABOVE this line, they will be preserved.
+> Please note: Deleting the original file will delete this file.
+
+<!--auto-generate-content-below-->
+# Transcript
+
+Mock transcript content

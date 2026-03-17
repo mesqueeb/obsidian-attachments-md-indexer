@@ -1,10 +1,18 @@
-# Test-single.canvas
+# Notes
 
-[[Test-single.canvas]]
+# Content
 
-This index file enables Obsidian and its plugins to manage canvas files effectively. It ensures alias files for canvases appear in graphs and allows plugins compatible only with MD files to access these files.
+File: [Test-single.canvas](Test-single.canvas)
 
-# Medias
+![[Test-single.canvas]]
+
+> Feel free to write custom notes ABOVE this line, they will be preserved.
+> Please note: Deleting the original file will delete this file.
+
+<!--auto-generate-content-below-->
+# Transcript
+
+# Media
 
 ![[Development/Pasted image 20250115171053.png|500]]
 

@@ -2,9 +2,9 @@
 
 # Content
 
-File: [Test-empty1.canvas](Test-empty1.canvas)
+File: [test.pdf](test.pdf)
 
-![[Test-empty1.canvas]]
+![[test.pdf#height=500]]
 
 > Feel free to write custom notes ABOVE this line, they will be preserved.
 > Please note: Deleting the original file will delete this file.
@@ -12,3 +12,4 @@ File: [Test-empty1.canvas](Test-empty1.canvas)
 <!--auto-generate-content-below-->
 # Transcript
 
+Mock transcript content

@@ -46,6 +46,8 @@ export class InMemoryFileAdapter implements FileAdapter {
 
 	async delete(path: string): Promise<void> {
 		this.storage.delete(path);
+		this.binaryStorage.delete(path);
+		this.modificationTimes.delete(path);
 	}
 
 	async create(filePath: string, content: string): Promise<void> {
