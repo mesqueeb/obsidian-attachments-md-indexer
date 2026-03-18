@@ -1,4 +1,4 @@
-import {Plugin, Notice} from 'obsidian';
+import {Plugin, Notice, Platform} from 'obsidian';
 import {CanvasService} from './service/CanvasService';
 import {FileDaoImpl} from './dao/FileDaoImpl';
 import {ObsidianFileAdapter} from './dao/ObsidianFileAdapter';
@@ -8,10 +8,10 @@ import {SettingsTab} from './utils/SettingsTab';
 import {PngConverterService} from './service/PngConverterService';
 import {JpgConverterService} from './service/JpgConverterService';
 import { JpegConverterService } from './service/JpegConverterService';
-import { GeminiAttachmentParserService } from './service/AttachmentParserService';
+import { GeminiAttachmentParserService, FatalProcessingError } from './service/AttachmentParserService';
 import { PdfConverterService } from './service/PdfConverterService';
-import { FatalProcessingError } from './service/AttachmentParserService';
-import { Platform } from 'obsidian';
+import { ConversionStatusTracker } from './service/ConversionStatusTracker';
+import { StatusView, STATUS_VIEW_TYPE } from './utils/StatusView';
 
 export default class ObsidianIndexer extends Plugin {
 	private isConverting = false;
@@ -20,6 +20,24 @@ export default class ObsidianIndexer extends Plugin {
 		// Initialize settings manager and load settings
 		const settingsService = new SettingsServiceImpl(this);
 		await settingsService.loadSettings();
+
+		// Initialize status tracker
+		const statusTracker = new ConversionStatusTracker();
+
+		// Register status view
+		this.registerView(STATUS_VIEW_TYPE, (leaf) => new StatusView(leaf, statusTracker));
+
+		// Add ribbon button to open status view
+		this.addRibbonIcon('list-checks', 'Indexer Status', async () => {
+			const existing = this.app.workspace.getLeavesOfType(STATUS_VIEW_TYPE);
+			if (existing.length > 0) {
+				this.app.workspace.revealLeaf(existing[0]);
+			} else {
+				const leaf = this.app.workspace.getLeaf('tab');
+				await leaf.setViewState({ type: STATUS_VIEW_TYPE, active: true });
+				this.app.workspace.revealLeaf(leaf);
+			}
+		});
 
 		// Initialize dependencies
 		const fileAdapter: FileAdapter = new ObsidianFileAdapter(this.app);
@@ -56,6 +74,13 @@ export default class ObsidianIndexer extends Plugin {
 		const pngConverter = new PngConverterService(fileDao, settingsService.indexFolder, pngParser, settingsService.fileFilter);
 		const jpgConverter = new JpgConverterService(fileDao, settingsService.indexFolder, jpgParser, settingsService.fileFilter);
 		const jpegConverter = new JpegConverterService(fileDao, settingsService.indexFolder, jpegParser, settingsService.fileFilter);
+
+		// Wire status tracker into all converters
+		canvasService.setStatusTracker(statusTracker);
+		pdfConverter.setStatusTracker(statusTracker);
+		pngConverter.setStatusTracker(statusTracker);
+		jpgConverter.setStatusTracker(statusTracker);
+		jpegConverter.setStatusTracker(statusTracker);
 
 		// Initialize converters and other services
 		const runConversion = async () => {
